@@ -8,7 +8,7 @@ import { LoginFormProps } from '@auth/types/user';
 import { userLogin } from '@auth/services/user';
 import { setStoredUserToken } from '@auth/utils/jwt';
 import { isUserAuthenticated } from '@auth/utils/user';
-import { useUserStore } from '@auth/stores/userStore';
+import ToggleDarkModeButtons from '@/common/components/ToggleDarkModeButtons';
 
 
 const Login: FC = () => {
@@ -16,7 +16,6 @@ const Login: FC = () => {
 
 	// Check if user is authenticated already
     const [userAuthenticated, setUserAuthenticated] = useState<boolean | null>(null);
-	const { setUser }  = useUserStore();
 
 	useEffect(() => {
 
@@ -71,14 +70,16 @@ const Login: FC = () => {
 		}
 	};
 
-
 	return userAuthenticated === null ? (
 		<LoadingThrobber className='h-screen w-full' />
 	) : userAuthenticated ? (
 		<Navigate to={'/'} />
 	) : (
-		<div className='h-screen w-screen grid place-items-center text-zinc-200'>
-			<div className='bg-zinc-700 w-11/12 h-auto max-w-[500px] p-5 rounded-md shadow-md flex flex-col gap-3'>
+		<div className='h-screen w-screen grid place-items-center bg-zinc-50 text-zinc-800 dark:text-zinc-200 dark:bg-zinc-800'>
+			<div className='absolute top-3 right-3'>
+				<ToggleDarkModeButtons />
+			</div>
+			<div className='bg-zinc-100/50 dark:bg-zinc-700 w-11/12 h-auto max-w-[500px] p-5 rounded-md shadow-md flex flex-col gap-3'>
 				<h2 className='text-lg font-bold'>Login</h2>
 				<div className='flex flex-col gap-5 items-center justify-center'>
 					<input
@@ -87,7 +88,7 @@ const Login: FC = () => {
 						value={formData.username}
 						type='text'
 						placeholder='Username or Email'
-						className='w-full p-3 bg-zinc-600 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-500/80 focus:bg-zinc-500/80'
+						className='w-full p-3  bg-zinc-100 dark:bg-zinc-600 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-500/80 dark:focus:bg-zinc-500/80'
 					/>
 					<input
 						onChange={handleFieldChange}
@@ -95,16 +96,16 @@ const Login: FC = () => {
 						value={formData.password}
 						type='password'
 						placeholder='Password'
-						className='w-full p-3 bg-zinc-600 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-500/80 focus:bg-zinc-500/80'
+						className='w-full p-3  bg-zinc-100 dark:bg-zinc-600 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-500/80 dark:focus:bg-zinc-500/80'
 					/>
 					<button
 						disabled={!formData.password || !formData.username}
 						onClick={handleSubmit}
 						type='submit'
-						className='bg-sky-600 transition-colors disabled:opacity-50 disabled:hover:bg-sky-600 hover:bg-sky-500 cursor-pointer w-full p-3 rounded-md font-bold flex justify-center'
+						className='text-zinc-100 bg-sky-600 transition-colors disabled:opacity-50 disabled:hover:bg-sky-600 hover:bg-sky-500 cursor-pointer w-full p-3 rounded-md font-bold flex justify-center'
 					>
 						{submitButtonLoading ? (
-							<LoadingThrobberIcon className='w-5 h-5 fill-zinc-100 text-zinc-300/50' />
+							<LoadingThrobberIcon className='w-5 h-5 !fill-zinc-100 !text-zinc-200/60 dark:!text-zinc-300/50' />
 						) : (
 							'Submit'
 						)}
