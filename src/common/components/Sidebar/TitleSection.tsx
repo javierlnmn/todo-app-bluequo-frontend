@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
 
 import ChevronIcon from '@icons/ChevronIcon';
+import CrownIcon from '@/common/icons/CrownIcon';
 
 
 interface TitleSectionProps {
     isSidebarOpen: boolean;
     handleToggleSidebar: () => void;
     username: string;
+    isSuperuser: boolean;
 }
 
-const TitleSection: React.FC<TitleSectionProps> = ({ isSidebarOpen, handleToggleSidebar, username }) => {
+const TitleSection: React.FC<TitleSectionProps> = ({ isSidebarOpen, handleToggleSidebar, username, isSuperuser }) => {
     return (
         <div className='h-11 flex items-center justify-between rounded-md transition-colors'>
             <div className='w-full flex justify-center items-center gap-2'>
@@ -29,7 +31,14 @@ const TitleSection: React.FC<TitleSectionProps> = ({ isSidebarOpen, handleToggle
                         transition={{ delay: 0.15 }}
                     >
                         <span className='text-sm max-w-36 font-light block truncate'>Welcome,</span>
-                        <span className='text-sm max-w-36 font-bold block truncate'>{username}</span>
+                        <div className='relative'>
+                            <span className='text-sm max-w-36 font-bold block truncate'>{username}</span>
+                            {isSuperuser && (
+                                <div className='absolute top-0 -right-2 rotate-[35deg]'>
+                                    <CrownIcon className='w-3 h-3 fill-yellow-400 stroke-yellow-400' />
+                                </div>
+                            )}
+                        </div>
                     </motion.div>
                 )}
             </div>

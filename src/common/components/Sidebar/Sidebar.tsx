@@ -12,7 +12,7 @@ import { useUserStore } from '@auth/stores/userStore';
 
 const Sidebar = () => {
 
-    const { username } = useUserStore();
+    const { username, isSuperuser } = useUserStore();
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -30,7 +30,7 @@ const Sidebar = () => {
                 width: isOpen ? '225px': 'fit-content'
             }}
         >
-            <TitleSection handleToggleSidebar={toggleSidebar} username={username} isSidebarOpen={isOpen} />
+            <TitleSection handleToggleSidebar={toggleSidebar} username={username} isSuperuser={isSuperuser} isSidebarOpen={isOpen} />
             <motion.span layout className='w-full h-[1px] bg-zinc-500'></motion.span>
             <div className='flex flex-col gap-2 flex-1'>
                 {sidebarRoutes.map((route, index) => (
