@@ -35,7 +35,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({ isSidebarOpen, handleToggle
                             <span className='text-sm max-w-36 font-bold block truncate'>{username}</span>
                             {isSuperuser && (
                                 <div className='absolute top-0 -right-2 rotate-[35deg]'>
-                                    <CrownIcon className='w-3 h-3 fill-yellow-400 stroke-yellow-400' />
+                                    <CrownIcon className='w-3 h-3 dark:fill-yellow-400 dark:stroke-yellow-400 fill-yellow-600 stroke-yellow-600' />
                                 </div>
                             )}
                         </div>

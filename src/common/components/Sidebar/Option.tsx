@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 
@@ -15,7 +15,7 @@ const Option: React.FC<SidebarOptionProps> = ({ isSidebarOpen, currentLocation, 
         <Link to={pathname}>
             <motion.button
                 layout
-                className={`cursor-pointer h-10 flex gap-2 w-full items-center transition-colors hover:bg-zinc-700 ${pathname == currentLocation && "bg-zinc-600/70 hover:!bg-zinc-600/70" }`}
+                className={`cursor-pointer h-10 flex gap-2 w-full items-center transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700 ${pathname == currentLocation && "bg-zinc-300/70 dark:bg-zinc-700/70" }`}
                 style={{ borderRadius: '5px' }}
             >
                 <motion.div

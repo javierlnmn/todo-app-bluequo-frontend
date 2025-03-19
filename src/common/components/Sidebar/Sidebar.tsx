@@ -6,8 +6,12 @@ import Option from '@common/components/Sidebar/Option';
 import TitleSection from '@common/components/Sidebar/TitleSection';
 import { sidebarRoutes } from '@common/routes/routes';
 import LogoutIcon from '@common/icons/LogoutIcon';
+import useDarkMode from '@common/hooks/useDarkMode';
 
 import { useUserStore } from '@auth/stores/userStore';
+import MoonIcon from '@/common/icons/MoonIcon';
+import SunIcon from '@/common/icons/SunIcon';
+import ToggleDarkModeButtons from '../ToggleDarkModeButtons';
 
 
 const Sidebar = () => {
@@ -25,7 +29,7 @@ const Sidebar = () => {
     return (
         <motion.nav
             layout
-            className='h-screen w-full bg-zinc-800 p-3 flex flex-col gap-3'
+            className='h-screen w-full max-md:fixed max-md:top-0 max-md:left-0 bg-zinc-200 dark:bg-zinc-800 p-3 flex flex-col gap-3'
             style={{
                 width: isOpen ? '225px': 'fit-content'
             }}
@@ -41,14 +45,17 @@ const Sidebar = () => {
                         {...route}
                     />
                 ))}
-                <div className='mt-auto text-red-500'>
-                    <Option
-                        isSidebarOpen={isOpen}
-                        currentLocation={location.pathname}
-                        Icon={LogoutIcon}
-                        pathname='logout'
-                        title='Logout'
-                    />
+                <div className='mt-auto'>
+                    <ToggleDarkModeButtons />
+                    <div className='text-red-500'>
+                        <Option
+                            isSidebarOpen={isOpen}
+                            currentLocation={location.pathname}
+                            Icon={LogoutIcon}
+                            pathname='logout'
+                            title='Logout'
+                        />
+                    </div>
                 </div>
             </div>
         </motion.nav>
