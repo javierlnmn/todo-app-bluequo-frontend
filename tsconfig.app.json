@@ -29,6 +29,7 @@
         "@common/*": ["common/*"],
         "@auth/*": ["auth/*"],
         "@icons/*": ["common/icons/*"],
+        "@todos/*": ["todos/*"],
     }
   },
   "include": ["src"]

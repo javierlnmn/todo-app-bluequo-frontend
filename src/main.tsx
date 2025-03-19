@@ -13,6 +13,8 @@ import Login from '@auth/components/Login';
 import PrivateRoute from '@auth/components/PrivateRoute';
 import Logout from '@auth/components/Logout';
 
+import TodoKanban from '@todos/components/TodoKanban';
+
 
 const router = createBrowserRouter([
 	{
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
 		),
 		children: [
 			{ path: sidebarRouteConstants.HOME, element: <Home /> },
-			{ path: sidebarRouteConstants.TODOS, element: <p>Todoes</p> },
+			{ path: sidebarRouteConstants.TODOS, element: <TodoKanban /> },
 		],
 	},
 	{
