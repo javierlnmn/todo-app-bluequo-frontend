@@ -50,7 +50,7 @@ const ModalWindow: FC<ModalWindowProps> = ({ children, displayed, closeable = fa
                     exit={{ opacity: 0 }}
                 >
                     <motion.div
-                        className={`relative p-5 bg-zinc-100 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 rounded-md shadow-md w-11/12 flex flex-col ${contentStyle}`}
+                        className={`relative p-5 bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 rounded-md shadow-md w-11/12 flex flex-col ${contentStyle}`}
                         initial={{ opacity: 0, y: "20vh" }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: "-20vh" }}

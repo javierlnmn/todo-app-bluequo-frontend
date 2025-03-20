@@ -136,7 +136,7 @@ const TodoKanban = () => {
 	if (isPending) return <LoadingThrobber className="h-full w-full" />;
 
 	return (
-		<div className="h-screen w-full bg-zinc-100 dark:bg-zinc-900 p-6">
+		<div className="w-full bg-zinc-100 dark:bg-zinc-900 p-6">
 			<h1 className="font-bold text-4xl mb-6">Todos</h1>
 			<div className="grid gap-6 grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 ">
 				<DragDropContext onDragEnd={onDragEnd}>
