@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import LoadingThrobber from "@/common/components/LoadingThrobber";
 import PlusIcon from "@common/icons/PlusIcon";
@@ -9,11 +9,10 @@ import { Todo, } from "@todos/types/todos.d";
 import { TodoStatus, } from "@todos/enums/todos.d";
 import TodoStatusBadge from "@todos/components/TodoStatusBadge";
 import TodoKanbanItem from "@todos/components/TodoKanbanItem";
-import { getTodos } from "@todos/services/todos";
+import { getTodos, updateTodoStatus } from "@todos/services/todos";
 
 
 const TodoKanban = () => {
-
 	// Todos fetchign
 	const { data: fetchedTodos = [], isPending, } = useQuery<Todo[]>({
 		queryKey: ["todos"],
@@ -30,38 +29,70 @@ const TodoKanban = () => {
 		}
 	}, [fetchedTodos]);
 
-	// Drag and drop
-	const onDragEnd = (result: any) => {
+
+	// Use Mutation for updating todo status
+	const mutation = useMutation({
+		mutationFn: updateTodoStatus,
+		onSuccess: (updatedTodo) => {
+			setTodos((prevTodos) =>
+				prevTodos.map((todo) =>
+					todo.id === updatedTodo.id ? updatedTodo : todo
+				)
+			);
+		},
+		onError: (error) => {
+			throw error;
+		},
+	});
+
+	const handleUpdateTodoAsync = (id: string, status: string) => {
+		const draggedTodoStatusKey = Object.keys(TodoStatus).find(key => (
+			TodoStatus[key as keyof typeof TodoStatus] === status
+		));
+		if (!draggedTodoStatusKey) {
+			return;
+		}
+		mutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
+	}
+
+	// On drag end handling
+	const onDragEnd = async (result: any) => {
 		const { destination, draggableId } = result;
-		if (!destination) return;
-	
+		const todo = todos.find(todo => todo.id === draggableId);
+
+		if (todo?.status !== destination.droppableId) {
+			handleUpdateTodoAsync(draggableId, destination.droppableId);
+		}
+
+		if (!destination || !todo) return;
+
 		const updatedTodos = [...todos];
 		const draggedTodoIndex = updatedTodos.findIndex(todo => todo.id === draggableId);
 		
 		if (draggedTodoIndex === -1) return;
-	
-		const [draggedTodo] = updatedTodos.splice(draggedTodoIndex, 1);
-		draggedTodo.status = destination.droppableId as TodoStatus;
-	
-		const destinationTodos = updatedTodos.filter(todo => todo.status === draggedTodo.status);
 
+		const draggedTodo = updatedTodos.splice(draggedTodoIndex, 1)[0];
+		draggedTodo.status = destination.droppableId as TodoStatus;
+
+		const destinationTodos = updatedTodos.filter(
+			(todo) => todo.status === draggedTodo.status
+		);
 		destinationTodos.splice(destination.index, 0, draggedTodo);
-	
+
 		const statusOrder = [TodoStatus.PENDING, TodoStatus.IN_PROGRESS, TodoStatus.COMPLETED];
 		const sortedTodos: Todo[] = [];
-	
-		statusOrder.forEach(status => {
+
+		statusOrder.forEach((status) => {
 			if (status === draggedTodo.status) {
 				sortedTodos.push(...destinationTodos);
 			} else {
-				sortedTodos.push(...updatedTodos.filter(todo => todo.status === status));
+				sortedTodos.push(...updatedTodos.filter((todo) => todo.status === status));
 			}
 		});
-	
+
 		setTodos(sortedTodos);
 	};
-	
-	
+
 	if (isPending) return <LoadingThrobber className="h-full w-full" />;
 
 	return (
