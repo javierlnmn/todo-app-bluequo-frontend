@@ -14,7 +14,7 @@ export interface Todo {
     title: string;
     description: string;
     status: TodoStatus;
-    due_date: Date;
+    due_date: string;
     assigned_to: string;
     comments: Comment[];
 }

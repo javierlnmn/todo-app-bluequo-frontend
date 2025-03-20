@@ -1,21 +1,35 @@
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { useQuery } from "@tanstack/react-query";
 
-import { Todo, } from "@todos/types/todos.d"; 
-import { TodoStatus, } from "@todos/enums/todos.d"; 
-import TodoStatusBadge from "./TodoStatusBadge";
-import TodoKanbanItem from "./TodoKanbanItem";
+import LoadingThrobber from "@/common/components/LoadingThrobber";
 
+import { Todo, } from "@todos/types/todos.d";
+import { TodoStatus, } from "@todos/enums/todos.d";
+import TodoStatusBadge from "@todos/components/TodoStatusBadge";
+import TodoKanbanItem from "@todos/components/TodoKanbanItem";
+import { getTodos } from "@todos/services/todos";
 
-const mockTodos: Todo[] = [
-    { id: "1", title: "Task 1", description: "Do something", status: TodoStatus.PENDING, assigned_to: "User A", due_date: new Date(), comments: [] },
-    { id: "2", title: "Task 2", description: "Work on this", status: TodoStatus.IN_PROGRESS, assigned_to: "User B", due_date: new Date(), comments: [] },
-    { id: "3", title: "Task 3", description: "Finish this", status: TodoStatus.COMPLETED, assigned_to: "User C", due_date: new Date(), comments: [] },
-];
 
 const TodoKanban = () => {
-    const [todos, setTodos] = useState<Todo[]>(mockTodos);
 
+	// Todos fetchign
+	const { data: fetchedTodos = [], isPending, } = useQuery<Todo[]>({
+		queryKey: ["todos"],
+		queryFn: getTodos,
+		retry: false,
+		refetchOnWindowFocus: false,
+	});
+
+	// Todos state managing
+	const [todos, setTodos] = useState<Todo[]>(fetchedTodos);
+	useEffect(() => {
+		if (!isPending && fetchedTodos) {
+			setTodos(fetchedTodos);
+		}
+	}, [fetchedTodos]);
+
+	// Drag and drop
     const onDragEnd = (result: any) => {
         if (!result.destination) return;
 
@@ -28,7 +42,9 @@ const TodoKanban = () => {
         }
     };
 
-    return (
+	if (isPending) return <LoadingThrobber className="h-full w-full" />;
+
+	return (
 		<div className="w-full bg-zinc-100 dark:bg-zinc-900 p-6">
 			<h1 className="font-bold text-4xl mb-6">Todos</h1>
 
@@ -37,7 +53,7 @@ const TodoKanban = () => {
 					{Object.values(TodoStatus).map((status) => (
 						<div
 							key={status}
-							className={`p-4 rounded-lg shadow-md min-h-[200px] flex flex-col gap-3
+							className={`p-4 rounded-lg min-h-[200px] flex flex-col gap-3
 								${status === TodoStatus.COMPLETED ? "bg-emerald-500/10 dark:bg-emerald-700/10" : ""}
 								${status === TodoStatus.IN_PROGRESS ? "bg-sky-500/10 dark:bg-sky-700/10" : ""}
 								${status === TodoStatus.PENDING ? "bg-purple-500/10 dark:bg-purple-700/10 lg:col-span-2 xl:col-span-1" : ""}
@@ -49,13 +65,13 @@ const TodoKanban = () => {
 
 							<Droppable droppableId={status}>
 								{(provided) => (
-									<div 
-										ref={provided.innerRef} 
-										{...provided.droppableProps} 
+									<div
+										ref={provided.innerRef}
+										{...provided.droppableProps}
 										className="flex flex-col min-h-[150px]"
 									>
-										{todos.filter((todo) => todo.status === status).map((todo, index) => (
-											<TodoKanbanItem index={index} todo={todo} />
+										{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
+											<TodoKanbanItem key={todo.id} index={index} todo={todo} />
 										))}
 										{provided.placeholder}
 									</div>
@@ -63,10 +79,10 @@ const TodoKanban = () => {
 							</Droppable>
 						</div>
 					))}
-        		</DragDropContext>
+				</DragDropContext>
 			</div>
 		</div>
-    );
+	);
 };
 
 export default TodoKanban;

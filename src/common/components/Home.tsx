@@ -16,7 +16,7 @@ const Home = () => {
                     <li>Delete tasks that are no longer needed.</li>
                 </ul>
 
-                <h2 className="font-semibold text-2xl text-sky-600">For Admins:</h2>
+                <h2 className="font-semibold text-2xl text-yellow-600">For Admins:</h2>
                 <ul className="list-disc pl-5 text-zinc-700 dark:text-zinc-200">
                     <li>Admins have special control to manage all tasks across users.</li>
                     <li>Edit, delete, and reassign tasks from all users.</li>
