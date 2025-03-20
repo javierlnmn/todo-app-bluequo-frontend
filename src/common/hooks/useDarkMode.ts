@@ -12,9 +12,15 @@ const useDarkMode = () => {
     }
 
     useEffect(() => {
-        const savedMode = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(savedMode || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches));
-        updateDocumentDarkMode(savedMode);
+        const storedDarkMode = localStorage.getItem('darkMode');
+        let darkMode = false;
+        if (storedDarkMode) {
+            darkMode = storedDarkMode === 'true';
+        } else {
+            darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        setDarkMode(darkMode);
+        updateDocumentDarkMode(darkMode);
     }, []);
 
     const toggleDarkMode = () => {
