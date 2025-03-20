@@ -6,6 +6,7 @@ import { Todo } from '@todos/types/todos.d';
 import PencilIcon from '@common/icons/PencilIcon';
 import { formatDate } from '@/common/utils/dates';
 import { useUserStore } from '@/auth/stores/userStore';
+import CrownIcon from '@/common/icons/CrownIcon';
 
 
 interface TodoKanbanItemProps {
@@ -41,7 +42,14 @@ const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index }) => {
                     {todo.description && <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">{todo.description}</p>}
                     <div className='flex justify-between items-center'>
                         {todo.assignedTo ? (
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400">{todo.assignedTo?.username}</p>
+                            <span className='relative'>
+                                <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{todo.assignedTo.username}</p>
+                                {todo.assignedTo.isSuperuser && (
+                                    <span className='absolute top-0 -right-2 rotate-[35deg]'>
+                                        <CrownIcon className='w-3 h-3 dark:fill-yellow-400 dark:stroke-yellow-400 fill-yellow-600 stroke-yellow-600' />
+                                    </span>
+                                )}
+                            </span>
                         ) : (
                             <p className="text-xs text-zinc-500 dark:text-zinc-400">Not assigned yet</p>
                         )}
