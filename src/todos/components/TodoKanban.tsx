@@ -30,17 +30,37 @@ const TodoKanban = () => {
 	}, [fetchedTodos]);
 
 	// Drag and drop
-    const onDragEnd = (result: any) => {
-        if (!result.destination) return;
+	const onDragEnd = (result: any) => {
+		const { destination, draggableId } = result;
+		if (!destination) return;
+	
+		const updatedTodos = [...todos];
+		const draggedTodoIndex = updatedTodos.findIndex(todo => todo.id === draggableId);
+		
+		if (draggedTodoIndex === -1) return;
+	
+		const [draggedTodo] = updatedTodos.splice(draggedTodoIndex, 1);
+		draggedTodo.status = destination.droppableId as TodoStatus;
+	
+		const destinationTodos = updatedTodos.filter(todo => todo.status === draggedTodo.status);
 
-        const updatedTodos = [...todos];
-        const draggedTodo = updatedTodos.find(todo => todo.id === result.draggableId);
-        
-        if (draggedTodo) {
-            draggedTodo.status = result.destination.droppableId as TodoStatus;
-            setTodos(updatedTodos);
-        }
-    };
+		destinationTodos.splice(destination.index, 0, draggedTodo);
+	
+		const statusOrder = [TodoStatus.PENDING, TodoStatus.IN_PROGRESS, TodoStatus.COMPLETED];
+		const sortedTodos: Todo[] = [];
+	
+		statusOrder.forEach(status => {
+			if (status === draggedTodo.status) {
+				sortedTodos.push(...destinationTodos);
+			} else {
+				sortedTodos.push(...updatedTodos.filter(todo => todo.status === status));
+			}
+		});
+	
+		setTodos(sortedTodos);
+	};
+	
+	
 
 	if (isPending) return <LoadingThrobber className="h-full w-full" />;
 
