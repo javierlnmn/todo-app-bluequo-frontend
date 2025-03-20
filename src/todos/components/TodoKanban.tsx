@@ -11,6 +11,9 @@ import { TodoStatus, } from "@todos/enums/todos.d";
 import TodoStatusBadge from "@todos/components/TodoStatusBadge";
 import TodoKanbanItem from "@todos/components/TodoKanbanItem";
 import { getTodos, updateTodoStatus } from "@todos/services/todos";
+import ModalWindow from "@/common/components/ModalWindow";
+import TodoForm, { TodoFormData } from "./TodoForm";
+import { getTodoStatusKey } from "../utils/todos";
 
 
 const TodoKanban = () => {
@@ -50,12 +53,34 @@ const TodoKanban = () => {
 	});
 
 	const handleUpdateTodoAsync = (id: string, status: string) => {
-		const draggedTodoStatusKey = Object.keys(TodoStatus).find(key => (
-			TodoStatus[key as keyof typeof TodoStatus] === status
-		));
+		const draggedTodoStatusKey = getTodoStatusKey(status as TodoStatus);
 		if (draggedTodoStatusKey) {
 			mutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
 		}
+	}
+
+	// Todo form displaying
+	const [displayForm, setDisplayForm] = useState(false);
+	const [defaultFormTodo, setDefaultFormTodo] = useState<TodoFormData>({
+		id: "",
+		title: "",
+		description: "",
+		status: getTodoStatusKey(TodoStatus.PENDING) || 'PENDING',
+		dueDate: "",
+		assignedTo: null,
+	})
+
+	const handleCreateTodoForm = (todoStatus: TodoStatus) => {
+		setDefaultFormTodo((prevValue) => ({
+			...prevValue,
+			status: getTodoStatusKey(todoStatus) || 'PENDING',
+		}));
+		setDisplayForm(true);
+	}
+
+	const handleEditTodoForm = (todo: TodoFormData) => {
+		setDefaultFormTodo(todo);
+		setDisplayForm(true);
 	}
 
 	// On drag end handling
@@ -99,7 +124,7 @@ const TodoKanban = () => {
 	if (isPending) return <LoadingThrobber className="h-full w-full" />;
 
 	return (
-		<div className="w-full bg-zinc-100 dark:bg-zinc-900 p-6">
+		<div className="h-screen w-full bg-zinc-100 dark:bg-zinc-900 p-6">
 			<h1 className="font-bold text-4xl mb-6">Todos</h1>
 			<div className="grid gap-6 grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 ">
 				<DragDropContext onDragEnd={onDragEnd}>
@@ -114,7 +139,9 @@ const TodoKanban = () => {
 						>
 							<div className="flex items-center justify-between">
 								<TodoStatusBadge todoStatus={status} />
-								<PlusIcon className="w-8 h-8 opacity-50 hover:opacity-100 transition-opacity cursor-pointer" />
+								<button onClick={() => handleCreateTodoForm(status)}>
+									<PlusIcon className="w-8 h-8 opacity-50 hover:opacity-100 transition-opacity cursor-pointer" />
+								</button>
 							</div>
 
 							<Droppable droppableId={status}>
@@ -125,7 +152,7 @@ const TodoKanban = () => {
 										className="flex flex-col min-h-[150px]"
 									>
 										{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
-											<TodoKanbanItem key={todo.id} index={index} todo={todo} />
+											<TodoKanbanItem key={todo.id} index={index} todo={todo} handleEditTodo={handleEditTodoForm} />
 										))}
 										{provided.placeholder}
 									</div>
@@ -135,6 +162,9 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
+			<ModalWindow onClose={() => {}} contentStyle={`max-w-[900px] relative`} displayed={displayForm} closeable={true}>
+				<TodoForm onClose={() => setDisplayForm(false)} todo={defaultFormTodo} />
+			</ModalWindow>
 		</div>
 	);
 };

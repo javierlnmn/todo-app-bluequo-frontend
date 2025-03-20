@@ -22,10 +22,10 @@ const AppLayout = () => {
 	}, [setUser]);
 
 	return (
-		<main className='bg-zinc-100 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 min-h-screen overflow-x-hidden max-md:pl-[65px]'>
+		<main className='bg-zinc-100 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 min-h-screen overflow-hidden max-md:pl-[65px]'>
 			<div className='flex'>
 				<Sidebar />
-				<div className="flex-1 p-4">
+				<div className="flex-1 p-4 h-screen overflow-y-auto">
 					<Outlet />
 				</div>
 			</div>

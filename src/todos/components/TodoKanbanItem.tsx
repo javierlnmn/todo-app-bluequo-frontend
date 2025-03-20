@@ -7,14 +7,17 @@ import PencilIcon from '@common/icons/PencilIcon';
 import { formatDate } from '@/common/utils/dates';
 import { useUserStore } from '@/auth/stores/userStore';
 import CrownIcon from '@/common/icons/CrownIcon';
+import { TodoFormData } from './TodoForm';
+import { getTodoStatusKey } from '../utils/todos';
 
 
 interface TodoKanbanItemProps {
     todo: Todo;
     index: number;
+    handleEditTodo: (todo: TodoFormData) => void;
 }
 
-const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index }) => {
+const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index, handleEditTodo }) => {
 
     const { username, isSuperuser } = useUserStore();
 
@@ -35,7 +38,7 @@ const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index }) => {
                 >
                     <div className='flex gap-2 items-center justify-between mb-2'>
                         <h3 className="font-semibold text-lg">{todo.title}</h3>
-                        <button onClick={() => console.log('edit todo')}>
+                        <button onClick={() => handleEditTodo({ ...todo, assignedTo: null, status: getTodoStatusKey(todo.status) || todo.status.toUpperCase().replace(' ', '_') })}>
                             <PencilIcon className='w-5 h-5 opacity-50 hover:opacity-100 transition-opacity cursor-pointer' />
                         </button>
                     </div>

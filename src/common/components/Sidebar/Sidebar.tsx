@@ -26,7 +26,7 @@ const Sidebar = () => {
     return (
         <motion.nav
             layout
-            className='h-screen w-full max-md:fixed max-md:top-0 max-md:left-0 bg-zinc-200 dark:bg-zinc-800 p-3 flex flex-col gap-3'
+            className='h-screen z-20 w-full max-md:fixed max-md:top-0 max-md:left-0 bg-zinc-200 dark:bg-zinc-800 p-3 flex flex-col gap-3'
             style={{
                 width: isOpen ? '225px': 'fit-content'
             }}

@@ -10,7 +10,7 @@ import { User } from "@auth/types/user";
 export interface Comment {
     id: string;
     todo: string;
-    user: string;
+    user: User;
     content: string;
 }
 
