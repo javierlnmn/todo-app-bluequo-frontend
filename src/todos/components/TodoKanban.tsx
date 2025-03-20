@@ -61,17 +61,17 @@ const TodoKanban = () => {
 
 	// Todo form displaying
 	const [displayForm, setDisplayForm] = useState(false);
-	const [defaultFormTodo, setDefaultFormTodo] = useState<TodoFormData>({
+	const [formTodo, setFormTodo] = useState<TodoFormData>({
 		id: "",
 		title: "",
 		description: "",
 		status: getTodoStatusKey(TodoStatus.PENDING) || 'PENDING',
 		dueDate: "",
 		assignedTo: null,
-	})
+	});
 
 	const handleCreateTodoForm = (todoStatus: TodoStatus) => {
-		setDefaultFormTodo((prevValue) => ({
+		setFormTodo((prevValue) => ({
 			...prevValue,
 			status: getTodoStatusKey(todoStatus) || 'PENDING',
 		}));
@@ -79,8 +79,20 @@ const TodoKanban = () => {
 	}
 
 	const handleEditTodoForm = (todo: TodoFormData) => {
-		setDefaultFormTodo(todo);
+		setFormTodo(todo);
 		setDisplayForm(true);
+	}
+
+	const closeTodoForm = () => {
+		setDisplayForm(false);
+		setFormTodo({
+			id: "",
+			title: "",
+			description: "",
+			status: getTodoStatusKey(TodoStatus.PENDING) || 'PENDING',
+			dueDate: "",
+			assignedTo: null,
+		});
 	}
 
 	// On drag end handling
@@ -162,8 +174,8 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
-			<ModalWindow onClose={() => {}} contentStyle={`max-w-[900px] relative`} displayed={displayForm} closeable={true}>
-				<TodoForm onClose={() => setDisplayForm(false)} todo={defaultFormTodo} />
+			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] relative`} displayed={displayForm} closeable={true}>
+				<TodoForm onClose={closeTodoForm} todo={formTodo} />
 			</ModalWindow>
 		</div>
 	);
