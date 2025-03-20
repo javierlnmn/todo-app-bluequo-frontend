@@ -3,6 +3,7 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { useQuery } from "@tanstack/react-query";
 
 import LoadingThrobber from "@/common/components/LoadingThrobber";
+import PlusIcon from "@common/icons/PlusIcon";
 
 import { Todo, } from "@todos/types/todos.d";
 import { TodoStatus, } from "@todos/enums/todos.d";
@@ -61,7 +62,6 @@ const TodoKanban = () => {
 	};
 	
 	
-
 	if (isPending) return <LoadingThrobber className="h-full w-full" />;
 
 	return (
@@ -79,8 +79,9 @@ const TodoKanban = () => {
 								${status === TodoStatus.PENDING ? "bg-purple-500/10 dark:bg-purple-700/10 lg:col-span-2 xl:col-span-1" : ""}
 							`}
 						>
-							<div className="flex justify-end">
+							<div className="flex items-center justify-between">
 								<TodoStatusBadge todoStatus={status} />
+								<PlusIcon className="w-8 h-8 opacity-50 hover:opacity-100 transition-opacity cursor-pointer" />
 							</div>
 
 							<Droppable droppableId={status}>

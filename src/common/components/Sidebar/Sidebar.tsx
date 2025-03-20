@@ -35,7 +35,7 @@ const Sidebar = () => {
             }}
         >
             <TitleSection handleToggleSidebar={toggleSidebar} username={username} isSuperuser={isSuperuser} isSidebarOpen={isOpen} />
-            <motion.span layout className='w-full h-[1px] bg-zinc-500'></motion.span>
+            <motion.span layout className='w-full h-[1px] bg-zinc-500 opacity-50'></motion.span>
             <div className='flex flex-col gap-2 flex-1'>
                 {sidebarRoutes.map((route, index) => (
                     <Option

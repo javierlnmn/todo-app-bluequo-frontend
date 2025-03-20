@@ -3,6 +3,10 @@ import { FC } from 'react';
 
 import { Todo } from '@todos/types/todos.d';
 
+import PencilIcon from '@common/icons/PencilIcon';
+import { formatDate } from '@/common/utils/dates';
+import { useUserStore } from '@/auth/stores/userStore';
+
 
 interface TodoKanbanItemProps {
     todo: Todo;
@@ -10,19 +14,39 @@ interface TodoKanbanItemProps {
 }
 
 const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index }) => {
+
+    const { username, isSuperuser } = useUserStore();
+
     return (
-        <Draggable draggableId={todo.id} index={index}>
+        <Draggable
+            draggableId={todo.id}
+            index={index}
+            isDragDisabled={!isSuperuser && todo.user.username !== username}
+        >
             {(provided) => (
                 <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className="flex flex-col gap-1 mb-3 bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg shadow-sm cursor-grab"
+                    className={`flex flex-col gap-1 mb-3 bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg shadow-sm cursor-grab
+                        ${!isSuperuser && todo.user.username !== username && `opacity-50 !cursor-default`}
+                    `}
                 >
-                    <h3 className="font-semibold text-lg">{todo.title}</h3>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-300">{todo.description}</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Assigned to: {todo.assigned_to}</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Due: {todo.due_date}</p>
+                    <div className='flex gap-2 items-center justify-between mb-2'>
+                        <h3 className="font-semibold text-lg">{todo.title}</h3>
+                        <button onClick={() => console.log('edit todo')}>
+                            <PencilIcon className='w-5 h-5 opacity-50 hover:opacity-100 transition-opacity cursor-pointer' />
+                        </button>
+                    </div>
+                    {todo.description && <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">{todo.description}</p>}
+                    <div className='flex justify-between items-center'>
+                        {todo.assignedTo ? (
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">{todo.assignedTo?.username}</p>
+                        ) : (
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">Not assigned yet</p>
+                        )}
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 text-right">{formatDate(todo.dueDate)}</p>
+                    </div>
                 </div>
             )}
         </Draggable>

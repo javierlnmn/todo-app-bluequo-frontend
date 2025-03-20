@@ -20,7 +20,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({ isSidebarOpen, handleToggle
                     className='h-full w-10 size-8 shrink-0 flex items-center justify-center'
                     onClick={handleToggleSidebar}
                 >
-                    <ChevronIcon className={`size-8 transition-transform duration-500 -rotate-90 ${isSidebarOpen && '!rotate-90'}`} />
+                    <ChevronIcon className={`size-8 transition duration-500 -rotate-90 ${isSidebarOpen && '!rotate-90'} opacity-50 hover:opacity-100 cursor-pointer`} />
                 </motion.div>
                 {isSidebarOpen && (
                     <motion.div

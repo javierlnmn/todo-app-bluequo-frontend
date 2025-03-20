@@ -37,7 +37,7 @@ export const getUserStoreData = async () => {
 			const userData = userDataResponse.data;
 			return {
 				username: userData.username,
-				isSuperuser: userData.is_superuser
+				isSuperuser: userData.isSuperuser
 			};
 		}
 	} catch (error) {

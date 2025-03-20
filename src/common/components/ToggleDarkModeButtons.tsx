@@ -8,7 +8,10 @@ const ToggleDarkModeButtons = () => {
     const { darkMode, toggleDarkMode } = useDarkMode();
 
     return (
-        <div>
+        <div
+            style={{ borderRadius: '5px' }}
+            className='hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors w-fit'
+        >
             <AnimatePresence mode="wait">
                 {darkMode ? (
                     <motion.button
@@ -17,9 +20,9 @@ const ToggleDarkModeButtons = () => {
                         className="cursor-pointer grid h-10 w-10 place-content-center"
                         style={{ borderRadius: '5px' }}
                         onClick={toggleDarkMode}
-                        initial={{ opacity: 0, x: 12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -12 }}
+                        initial={{ opacity: 0, x: 12, rotate: 45 }}
+                        animate={{ opacity: 1, x: 0, rotate: 0 }}
+                        exit={{ opacity: 0, x: -12, rotate: -45 }}
                         transition={{ duration: 0.2 }}
                     >
                         <SunIcon className="w-6 h-6" />
@@ -31,9 +34,9 @@ const ToggleDarkModeButtons = () => {
                         className="cursor-pointer grid h-10 w-10 place-content-center"
                         style={{ borderRadius: '5px' }}
                         onClick={toggleDarkMode}
-                        initial={{ opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 12 }}
+                        initial={{ opacity: 0, x: 12, rotate: 45 }}
+                        animate={{ opacity: 1, x: 0, rotate: 0 }}
+                        exit={{ opacity: 0, x: -12, rotate: -45 }}
                         transition={{ duration: 0.2 }}
                     >
                         <MoonIcon className="w-6 h-6" />
