@@ -6,11 +6,8 @@ import Option from '@common/components/Sidebar/Option';
 import TitleSection from '@common/components/Sidebar/TitleSection';
 import { sidebarRoutes } from '@common/routes/routes';
 import LogoutIcon from '@common/icons/LogoutIcon';
-import useDarkMode from '@common/hooks/useDarkMode';
 
 import { useUserStore } from '@auth/stores/userStore';
-import MoonIcon from '@/common/icons/MoonIcon';
-import SunIcon from '@/common/icons/SunIcon';
 import ToggleDarkModeButtons from '../ToggleDarkModeButtons';
 
 

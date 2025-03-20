@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast, } from "react-toastify";
 
 import LoadingThrobber from "@/common/components/LoadingThrobber";
 import PlusIcon from "@common/icons/PlusIcon";
@@ -30,7 +31,7 @@ const TodoKanban = () => {
 	}, [fetchedTodos]);
 
 
-	// Use Mutation for updating todo status
+	// Todos updating with mutation
 	const mutation = useMutation({
 		mutationFn: updateTodoStatus,
 		onSuccess: (updatedTodo) => {
@@ -41,6 +42,9 @@ const TodoKanban = () => {
 			);
 		},
 		onError: (error) => {
+			toast.error('Oops! An error occured while updating the status of the todo', {
+				className: '!bg-zinc-100 dark:!bg-zinc-800 !text-zinc-800 dark:!text-zinc-200',
+			});
 			throw error;
 		},
 	});
@@ -49,10 +53,9 @@ const TodoKanban = () => {
 		const draggedTodoStatusKey = Object.keys(TodoStatus).find(key => (
 			TodoStatus[key as keyof typeof TodoStatus] === status
 		));
-		if (!draggedTodoStatusKey) {
-			return;
+		if (draggedTodoStatusKey) {
+			mutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
 		}
-		mutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
 	}
 
 	// On drag end handling
@@ -98,7 +101,6 @@ const TodoKanban = () => {
 	return (
 		<div className="w-full bg-zinc-100 dark:bg-zinc-900 p-6">
 			<h1 className="font-bold text-4xl mb-6">Todos</h1>
-
 			<div className="grid gap-6 grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 ">
 				<DragDropContext onDragEnd={onDragEnd}>
 					{Object.values(TodoStatus).map((status) => (

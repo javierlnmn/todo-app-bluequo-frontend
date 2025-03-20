@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from '@common/components/Sidebar/Sidebar';
 import { useUserStore } from '@auth/stores/userStore';
 import { getUserStoreData } from '@auth/utils/user';
+import { ToastContainer } from 'react-toastify';
 
 const AppLayout = () => {
 	const { setUser } = useUserStore();
@@ -28,6 +29,7 @@ const AppLayout = () => {
 					<Outlet />
 				</div>
 			</div>
+			<ToastContainer />
 		</main>
 	);
 };
