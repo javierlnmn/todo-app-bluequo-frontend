@@ -182,12 +182,10 @@ const TodoKanban = () => {
 										{...provided.droppableProps}
 										className="flex flex-col min-h-[150px]"
 									>
-                    					<AnimatePresence>
-											{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
-												<TodoKanbanItem key={todo.id} index={index} todo={todo} handleEditTodo={handleEditTodoForm} handleDeleteTodo={handleDeleteTodo} />
-											))}
+										{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
+											<TodoKanbanItem key={todo.id} index={index} todo={todo} handleEditTodo={handleEditTodoForm} handleDeleteTodo={handleDeleteTodo} />
+										))}
 										{provided.placeholder}
-										</AnimatePresence>
 									</div>
 								)}
 							</Droppable>
