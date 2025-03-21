@@ -96,7 +96,7 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 						value={formData.description}
 						onChange={handleFieldChange}
 						placeholder="Todo Description"
-						className="w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+						className="w-full h-32 p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
 					/>
 				</div>
 

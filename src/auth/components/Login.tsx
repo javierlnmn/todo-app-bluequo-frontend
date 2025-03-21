@@ -72,15 +72,15 @@ const Login: FC = () => {
 	};
 
 	return userAuthenticated === null ? (
-		<LoadingThrobber className='h-screen w-full' />
+		<LoadingThrobber className='h-screen w-full bg-zinc-50 text-zinc-800 dark:text-zinc-200 dark:bg-zinc-800' />
 	) : userAuthenticated ? (
 		<Navigate to={'/'} />
 	) : (
-		<div className='h-screen w-screen grid place-items-center bg-zinc-50 text-zinc-800 dark:text-zinc-200 dark:bg-zinc-800'>
+		<div className='h-screen w-screen grid place-items-center bg-zinc-50 text-zinc-900 dark:text-zinc-200 dark:bg-zinc-900'>
 			<div className='absolute top-3 right-3'>
 				<ToggleDarkModeButtons />
 			</div>
-			<div className='bg-zinc-100/50 dark:bg-zinc-700 w-11/12 h-auto max-w-[500px] p-5 rounded-md shadow-md flex flex-col gap-3'>
+			<div className='bg-zinc-100 dark:bg-zinc-800 w-11/12 h-auto max-w-[500px] p-5 rounded-md shadow-md flex flex-col gap-3'>
 				<h2 className='text-lg font-bold'>Login</h2>
 				<div className='flex flex-col gap-5 items-center justify-center'>
 					<input
@@ -89,7 +89,7 @@ const Login: FC = () => {
 						value={formData.username}
 						type='text'
 						placeholder='Username or Email'
-						className='w-full p-3  bg-zinc-100 dark:bg-zinc-600 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-500/80 dark:focus:bg-zinc-500/80'
+						className='w-full p-3  bg-zinc-200 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-300/70 focus:bg-zinc-300/70 dark:hover:bg-zinc-500/80 dark:focus:bg-zinc-500/80'
 					/>
 					<input
 						onChange={handleFieldChange}
@@ -97,7 +97,7 @@ const Login: FC = () => {
 						value={formData.password}
 						type='password'
 						placeholder='Password'
-						className='w-full p-3  bg-zinc-100 dark:bg-zinc-600 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-500/80 dark:focus:bg-zinc-500/80'
+						className='w-full p-3  bg-zinc-200 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-300/70 focus:bg-zinc-300/70 dark:hover:bg-zinc-500/80 dark:focus:bg-zinc-500/80'
 					/>
 					<button
 						disabled={!formData.password || !formData.username}

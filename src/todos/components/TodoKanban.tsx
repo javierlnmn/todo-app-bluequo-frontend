@@ -193,7 +193,7 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
-			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[60vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
+			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[70vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
 				<div className="flex flex-col gap-4">
 					<TodoForm onClose={closeTodoForm} todo={formTodo} />
 					{formTodo.id && (
