@@ -8,24 +8,31 @@ import { isOwnerOrAdmin } from '@auth/utils/user';
 
 import { formatDate } from '@common/utils/dates';
 
-import { Comment } from '@todos/types/todos.d';
-import { deleteComment } from '@todos/services/comments';
+import { Comment, Todo } from '@todos/types/todos.d';
+import { deleteComment, postComment } from '@todos/services/comments';
 
 import CrownIcon from '@icons/CrownIcon';
 import TrashIcon from '@icons/TrashIcon';
+import LoadingThrobberIcon from '@icons/LoadingThrobberIcon';
 
+
+export interface CommentFormData {
+    content: string;
+    todo: string;
+}
 
 interface TodoCommentsProps {
     comments: Comment[];
+    todoId: Todo['id'];
 }
 
-const TodoComments: FC<TodoCommentsProps> = ({ comments }) => {
+const TodoComments: FC<TodoCommentsProps> = ({ comments, todoId }) => {
     const { username, isSuperuser } = useUserStore();
     
     const [commentList, setCommentList] = useState(comments);
     const queryClient = useQueryClient();
 
-    const mutation = useMutation({
+    const deleteCommentMutation = useMutation({
         mutationFn: deleteComment,
         onSuccess: (commentId: Comment['id']) => {
             setCommentList((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
@@ -42,12 +49,73 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments }) => {
     });
 
     const handleDeleteComment = (id: string) => {
-        mutation.mutate(id);
+        deleteCommentMutation.mutate(id);
     };
+
+    // Comment form
+    const emptyCommentFormData: CommentFormData = { content: '', todo: todoId, };
+    const [commentFormData, setCommentFormData] = useState<CommentFormData>(emptyCommentFormData);
+
+    const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+		setCommentFormData({ ...commentFormData, [e.target.name]: e.target.value });
+	}
+
+    const isCommentFormValid = (): boolean => {
+		return (
+			!commentFormData.content
+		)
+	}
+
+    // Mutation for posting comments
+    const postCommentMutation = useMutation({
+        mutationFn: postComment,
+        onSuccess: (comment) => {
+            setCommentList((prevComments) => [...prevComments, comment]);
+            setCommentFormData(emptyCommentFormData);
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
+        },
+        onError: (error) => {
+            toast.error('Oops! An error occured while posting a comment!', {
+                className: '!bg-zinc-100 dark:!bg-zinc-800 !text-zinc-800 dark:!text-zinc-200',
+            });
+            throw error;
+        },
+    });
+
+    const { isPending }= postCommentMutation;
+
+    const handleSubmitPostComment = (e: React.FormEvent) => {
+        e.preventDefault();
+        postCommentMutation.mutate(commentFormData);
+    }
 
     return (
         <div className="flex flex-col gap-2">
             <h3 className="text-xl font-bold">Comments</h3>
+            <form className='flex items-center gap-3 mb-3'>
+                <input
+                    type="text"
+                    id="content"
+                    name="content"
+                    value={commentFormData.content}
+                    className="h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+                    onChange={handleFieldChange}
+                    placeholder="Comment something..."
+                    required
+                />
+                <button
+                    disabled={isCommentFormValid()}
+                    onClick={handleSubmitPostComment}
+                    type="submit"
+                    className="h-full text-zinc-100 bg-sky-600 transition-colors disabled:opacity-50 disabled:hover:bg-sky-600 hover:bg-sky-500 cursor-pointer w-1/4 p-3 rounded-md font-bold flex justify-center"
+                >
+                    {isPending ? (
+                        <LoadingThrobberIcon className="w-5 h-5 !fill-zinc-100 !text-zinc-200/60 dark:!text-zinc-300/50" />
+                    ) : (
+                        "Comment"
+                    )}
+                </button>
+            </form>
             {commentList.length > 0 ? (
                 <div className="flex flex-col gap-3">
                     <AnimatePresence>
@@ -55,7 +123,10 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments }) => {
                             <motion.div
                                 layout
                                 key={comment.id}
-                                className="bg-zinc-200 dark:bg-zinc-700 rounded-md p-3 py-2 flex flex-col gap-2"
+                                className={`bg-zinc-200 dark:bg-zinc-700 rounded-md p-3 py-2 flex flex-col gap-2 max-md:w-11/12 w-8/12
+                                    ${username === comment.user.username ? 'ml-auto' : 'mr-auto' }
+                                `}
+                                initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0, x: -20 }}
                                 transition={{ duration: 0.2 }}

@@ -225,22 +225,22 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
-			<ModalWindow onClose={handleCloseTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[70vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
+			<ModalWindow onClose={handleCloseTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[75vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
 				<div className="flex flex-col gap-4">
 					<TodoForm onClose={handleCloseTodoForm} todo={formTodo} />
 					{formTodo.id && (
 						<>
 							<span className='w-full h-[1px] bg-zinc-500 opacity-50'></span>
-							<TodoComments comments={todoComments} />
+							<TodoComments todoId={formTodo.id} comments={todoComments} />
 						</>
 					)}
 				</div>
 			</ModalWindow>
-			<ModalWindow onClose={handleCloseViewTodo} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[70vh] overflow-auto relative`} displayed={displayViewTodo} closeable={true}>
+			<ModalWindow onClose={handleCloseViewTodo} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[75vh] overflow-auto relative`} displayed={displayViewTodo} closeable={true}>
 				<div className="flex flex-col gap-4">
 					<TodoDetail todo={viewingTodo} />
 					<span className='w-full h-[1px] bg-zinc-500 opacity-50'></span>
-					<TodoComments comments={viewingTodo.comments} />
+					<TodoComments todoId={viewingTodo.id} comments={viewingTodo.comments} />
 				</div>
 			</ModalWindow>
 		</div>
