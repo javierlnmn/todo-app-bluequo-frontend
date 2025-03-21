@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast, } from "react-toastify";
 
 import LoadingThrobber from "@common/components/LoadingThrobber";
@@ -13,11 +13,14 @@ import TodoStatusBadge from "@todos/components/TodoStatusBadge";
 import TodoKanbanItem from "@todos/components/TodoKanbanItem";
 import TodoForm, { TodoFormData } from "@todos/components/TodoForm";
 import TodoComments from "@todos/components/TodoComments";
-import { getTodos, updateTodoStatus } from "@todos/services/todos";
+import { deleteTodo, getTodos, updateTodoStatus } from "@todos/services/todos";
 import { getTodoStatusKey } from "@todos/utils/todos";
+import { AnimatePresence } from "framer-motion";
 
 
 const TodoKanban = () => {
+    const queryClient = useQueryClient();
+
 	// Todos fetchign
 	const { data: fetchedTodos = [], isPending, } = useQuery<Todo[]>({
 		queryKey: ["todos"],
@@ -36,7 +39,7 @@ const TodoKanban = () => {
 
 
 	// Todos status updating with mutation
-	const mutation = useMutation({
+	const todoStatusMutation = useMutation({
 		mutationFn: updateTodoStatus,
 		onSuccess: (updatedTodo) => {
 			setTodos((prevTodos) =>
@@ -56,7 +59,7 @@ const TodoKanban = () => {
 	const handleUpdateTodoAsync = (id: string, status: string) => {
 		const draggedTodoStatusKey = getTodoStatusKey(status as TodoStatus);
 		if (draggedTodoStatusKey) {
-			mutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
+			todoStatusMutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
 		}
 	}
 
@@ -88,6 +91,27 @@ const TodoKanban = () => {
 		setDisplayForm(false);
 		setFormTodo(emptyTodoFormData);
 		setTodoComments([]);
+	}
+
+	// Todo deleting
+	const todoDeleteMutation = useMutation({
+		mutationFn: deleteTodo,
+		onSuccess: (todoId) => {
+            setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+            toast.success('Todo deleted successfuly!', {
+				className: '!bg-zinc-100 dark:!bg-zinc-800 !text-zinc-800 dark:!text-zinc-200',
+			});
+        },
+        onError: () => {
+            toast.error('Oops! An error occured while deleting a todo!', {
+				className: '!bg-zinc-100 dark:!bg-zinc-800 !text-zinc-800 dark:!text-zinc-200',
+			});
+        }
+    });
+
+	const handleDeleteTodo = (id: string) => {
+		todoDeleteMutation.mutate(id);
 	}
 
 	// On drag end handling
@@ -158,10 +182,12 @@ const TodoKanban = () => {
 										{...provided.droppableProps}
 										className="flex flex-col min-h-[150px]"
 									>
-										{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
-											<TodoKanbanItem key={todo.id} index={index} todo={todo} handleEditTodo={handleEditTodoForm} />
-										))}
+                    					<AnimatePresence>
+											{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
+												<TodoKanbanItem key={todo.id} index={index} todo={todo} handleEditTodo={handleEditTodoForm} handleDeleteTodo={handleDeleteTodo} />
+											))}
 										{provided.placeholder}
+										</AnimatePresence>
 									</div>
 								)}
 							</Droppable>
@@ -169,7 +195,7 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
-			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] max-h-[90vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
+			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[60vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
 				<div className="flex flex-col gap-4">
 					<TodoForm onClose={closeTodoForm} todo={formTodo} />
 					{formTodo.id && (

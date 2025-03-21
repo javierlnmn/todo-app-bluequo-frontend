@@ -107,3 +107,25 @@ export const updateTodo = async ({ ...todo }: TodoFormData) => {
 		throw error;
 	}
 };
+
+export const deleteTodo = async (todoId: string) => {
+	const userJwt = getStoredUserToken();
+
+	try {
+
+		await axios.delete(
+			`${API_BASE_URL}/todos/todos/${todoId}/`,
+			{
+				headers: {
+					Authorization: userJwt,
+				},
+			}
+		);
+
+		return todoId;
+
+	} catch (error) {
+		console.error("Error updating todo status:", error);
+		throw error;
+	}
+};
