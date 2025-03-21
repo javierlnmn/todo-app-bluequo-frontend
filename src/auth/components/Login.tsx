@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
+import LoadingThrobberIcon from '@icons/LoadingThrobberIcon';
+
 import LoadingThrobber from '@common/components/LoadingThrobber';
-import LoadingThrobberIcon from '@common/icons/LoadingThrobberIcon';
+import ToggleDarkModeButtons from '@common/components/ToggleDarkModeButtons';
 
 import { LoginFormProps } from '@auth/types/user';
 import { userLogin } from '@auth/services/user';
 import { setStoredUserToken } from '@auth/utils/jwt';
 import { isUserAuthenticated } from '@auth/utils/user';
-import ToggleDarkModeButtons from '@/common/components/ToggleDarkModeButtons';
 
 
 const Login: FC = () => {

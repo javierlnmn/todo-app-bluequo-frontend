@@ -2,10 +2,11 @@ import { FC, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+import LoadingThrobberIcon from "@common/icons/LoadingThrobberIcon";
+
 import { TodoStatus } from "@todos/enums/todos.d";
 import { createTodo, updateTodo } from "@todos/services/todos";
-import { getTodoStatusKey } from "../utils/todos";
-import LoadingThrobberIcon from "@/common/icons/LoadingThrobberIcon";
+import { getTodoStatusKey } from "@todos/utils/todos";
 
 
 export interface TodoFormData {

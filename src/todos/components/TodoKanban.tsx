@@ -3,18 +3,18 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast, } from "react-toastify";
 
-import LoadingThrobber from "@/common/components/LoadingThrobber";
+import LoadingThrobber from "@common/components/LoadingThrobber";
 import PlusIcon from "@common/icons/PlusIcon";
+import ModalWindow from "@common/components/ModalWindow";
 
 import { Todo, Comment } from "@todos/types/todos.d";
 import { TodoStatus, } from "@todos/enums/todos.d";
 import TodoStatusBadge from "@todos/components/TodoStatusBadge";
 import TodoKanbanItem from "@todos/components/TodoKanbanItem";
+import TodoForm, { TodoFormData } from "@todos/components/TodoForm";
+import TodoComments from "@todos/components/TodoComments";
 import { getTodos, updateTodoStatus } from "@todos/services/todos";
-import ModalWindow from "@/common/components/ModalWindow";
-import TodoForm, { TodoFormData } from "./TodoForm";
-import { getTodoStatusKey } from "../utils/todos";
-import TodoComments from "./TodoComments";
+import { getTodoStatusKey } from "@todos/utils/todos";
 
 
 const TodoKanban = () => {

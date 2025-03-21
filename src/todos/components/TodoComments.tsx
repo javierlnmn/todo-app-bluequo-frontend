@@ -1,7 +1,9 @@
 import { FC } from 'react';
 
 import { Comment } from '@todos/types/todos.d';
-import { formatDate } from '@/common/utils/dates';
+
+import { formatDate } from '@common/utils/dates';
+
 import CrownIcon from '@icons/CrownIcon';
 
 

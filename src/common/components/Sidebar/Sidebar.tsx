@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+import LogoutIcon from '@icons/LogoutIcon';
+
 import Option from '@common/components/Sidebar/Option';
 import TitleSection from '@common/components/Sidebar/TitleSection';
 import { sidebarRoutes } from '@common/routes/routes';
-import LogoutIcon from '@common/icons/LogoutIcon';
+import ToggleDarkModeButtons from '@common/components/ToggleDarkModeButtons';
 
 import { useUserStore } from '@auth/stores/userStore';
-import ToggleDarkModeButtons from '../ToggleDarkModeButtons';
 
 
 const Sidebar = () => {

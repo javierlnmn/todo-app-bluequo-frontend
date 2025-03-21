@@ -1,6 +1,7 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import PlusIcon from '../icons/PlusIcon';
+
+import PlusIcon from '@icons/PlusIcon';
 
 
 interface BaseModalWindowProps {

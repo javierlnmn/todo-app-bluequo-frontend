@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
+import CrownIcon from '@icons/CrownIcon';
 import ChevronIcon from '@icons/ChevronIcon';
-import CrownIcon from '@/common/icons/CrownIcon';
 
 
 interface TitleSectionProps {

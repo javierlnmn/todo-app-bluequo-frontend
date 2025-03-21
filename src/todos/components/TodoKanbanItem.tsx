@@ -1,13 +1,13 @@
 import { Draggable } from '@hello-pangea/dnd';
 import { FC } from 'react';
 
+import { useUserStore } from '@auth/stores/userStore';
+
 import { Todo } from '@todos/types/todos.d';
 
-import PencilIcon from '@common/icons/PencilIcon';
-import { formatDate } from '@/common/utils/dates';
-import { useUserStore } from '@/auth/stores/userStore';
-import CrownIcon from '@/common/icons/CrownIcon';
-import { getTodoStatusKey } from '../utils/todos';
+import PencilIcon from '@icons/PencilIcon';
+import { formatDate } from '@common/utils/dates';
+import CrownIcon from '@icons/CrownIcon';
 
 
 interface TodoKanbanItemProps {

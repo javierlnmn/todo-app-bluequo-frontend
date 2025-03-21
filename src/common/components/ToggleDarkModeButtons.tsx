@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
 import useDarkMode from '@common/hooks/useDarkMode';
-import MoonIcon from '@common/icons/MoonIcon';
-import SunIcon from '@common/icons/SunIcon';
+
+import MoonIcon from '@icons/MoonIcon';
+import SunIcon from '@icons/SunIcon';
+
 
 const ToggleDarkModeButtons = () => {
     const { darkMode, toggleDarkMode } = useDarkMode();

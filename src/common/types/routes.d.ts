@@ -1,5 +1,6 @@
-import { RouteConstant } from "@common/enums/routes";
 import { FC, ReactNode } from "react";
+
+import { RouteConstant } from "@common/enums/routes";
 
 
 export interface Route {
