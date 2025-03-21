@@ -6,7 +6,7 @@ import { toast, } from "react-toastify";
 import LoadingThrobber from "@/common/components/LoadingThrobber";
 import PlusIcon from "@common/icons/PlusIcon";
 
-import { Todo, } from "@todos/types/todos.d";
+import { Todo, Comment } from "@todos/types/todos.d";
 import { TodoStatus, } from "@todos/enums/todos.d";
 import TodoStatusBadge from "@todos/components/TodoStatusBadge";
 import TodoKanbanItem from "@todos/components/TodoKanbanItem";
@@ -14,6 +14,7 @@ import { getTodos, updateTodoStatus } from "@todos/services/todos";
 import ModalWindow from "@/common/components/ModalWindow";
 import TodoForm, { TodoFormData } from "./TodoForm";
 import { getTodoStatusKey } from "../utils/todos";
+import TodoComments from "./TodoComments";
 
 
 const TodoKanban = () => {
@@ -59,40 +60,34 @@ const TodoKanban = () => {
 		}
 	}
 
-	// Todo form displaying
+	// Todo form and comments displaying
 	const [displayForm, setDisplayForm] = useState(false);
-	const [formTodo, setFormTodo] = useState<TodoFormData>({
+	const emptyTodoFormData: TodoFormData = {
 		id: "",
 		title: "",
 		description: "",
 		status: getTodoStatusKey(TodoStatus.PENDING) || 'PENDING',
 		dueDate: "",
 		assignedTo: null,
-	});
+	}
+	const [formTodo, setFormTodo] = useState<TodoFormData>(emptyTodoFormData);
+	const [todoComments, setTodoComments] = useState<Comment[]>([]);
 
 	const handleCreateTodoForm = (todoStatus: TodoStatus) => {
-		setFormTodo((prevValue) => ({
-			...prevValue,
-			status: getTodoStatusKey(todoStatus) || 'PENDING',
-		}));
+		setFormTodo({ ...emptyTodoFormData, status: getTodoStatusKey(todoStatus) || 'PENDING', });
 		setDisplayForm(true);
 	}
 
-	const handleEditTodoForm = (todo: TodoFormData) => {
-		setFormTodo(todo);
+	const handleEditTodoForm = (todo: Todo) => {
+		setFormTodo({ ...todo, assignedTo: null, status: getTodoStatusKey(todo.status) || todo.status.toUpperCase().replace(' ', '_') });
+		setTodoComments(todo.comments);
 		setDisplayForm(true);
 	}
 
 	const closeTodoForm = () => {
 		setDisplayForm(false);
-		setFormTodo({
-			id: "",
-			title: "",
-			description: "",
-			status: getTodoStatusKey(TodoStatus.PENDING) || 'PENDING',
-			dueDate: "",
-			assignedTo: null,
-		});
+		setFormTodo(emptyTodoFormData);
+		setTodoComments([]);
 	}
 
 	// On drag end handling
@@ -174,8 +169,16 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
-			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] relative`} displayed={displayForm} closeable={true}>
-				<TodoForm onClose={closeTodoForm} todo={formTodo} />
+			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] max-h-[90vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
+				<div className="flex flex-col gap-4">
+					<TodoForm onClose={closeTodoForm} todo={formTodo} />
+					{formTodo.id && (
+						<>
+							<span className='w-full h-[1px] bg-zinc-500 opacity-50'></span>
+							<TodoComments comments={todoComments} />
+						</>
+					)}
+				</div>
 			</ModalWindow>
 		</div>
 	);

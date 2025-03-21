@@ -71,9 +71,8 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 	}
 
 	return (
-		<div className="flex flex-col gap-2">
-			<h2 className="text-xl font-bold mb-4">{todo.id ? "Edit Todo" : "Create Todo"}</h2>
-
+		<div className="flex flex-col gap-4">
+			<h3 className="text-xl font-bold mb-1">{todo.id ? "Edit Todo" : "Create Todo"}</h3>
 			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 				<div className="flex flex-col items-start gap-1">
 					<label htmlFor="title" className="font-bold">Title *</label>
@@ -118,7 +117,7 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 						</select>
 					</div>
 					<div className="flex-1 flex flex-col items-start gap-1">
-						<label htmlFor="title" className="font-bold">Description</label>
+						<label htmlFor="title" className="font-bold">Due date *</label>
 						<input
 							type="date"
 							name="dueDate"
@@ -128,7 +127,7 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 						/>
 					</div>
 				</div>
-
+				<p className="font-light opacity-70 text-sm">Fields marked with * are required</p>
 				<div className="flex items-center justify-end gap-2">
 					<button
 						disabled={isFormValid()}

@@ -12,6 +12,7 @@ export interface Comment {
     todo: string;
     user: User;
     content: string;
+    created: string;
 }
 
 export interface Todo {
@@ -23,4 +24,5 @@ export interface Todo {
     user: User;
     assignedTo: User;
     comments: Comment[];
+    lastUpdated: string;
 }
