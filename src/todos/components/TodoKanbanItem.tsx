@@ -11,6 +11,7 @@ import TrashIcon from '@icons/TrashIcon';
 import CrownIcon from '@icons/CrownIcon';
 
 import { formatDate } from '@common/utils/dates';
+import CommentIcon from '@/common/icons/CommentIcon';
 
 
 interface TodoKanbanItemProps {
@@ -18,9 +19,10 @@ interface TodoKanbanItemProps {
     index: number;
     handleEditTodo: (todo: Todo) => void;
     handleDeleteTodo: (todoId: Todo['id']) => void;
+    handleViewTodo: (todo: Todo) => void;
 }
 
-const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index, handleEditTodo, handleDeleteTodo }) => {
+const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index, handleEditTodo, handleDeleteTodo, handleViewTodo }) => {
 
     const { username, isSuperuser } = useUserStore();
 
@@ -36,18 +38,28 @@ const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index, handleEditTodo, 
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     className={`flex flex-col gap-1 mb-3 bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg shadow-sm cursor-grab
-                        ${!isOwnerOrAdmin(isSuperuser, username, todo.user.username) && `opacity-50 !cursor-default`}
+                        ${!isOwnerOrAdmin(isSuperuser, username, todo.user.username) && `opacity-70 !cursor-default`}
                     `}
                 >
                     <div className='flex gap-2 items-center justify-between mb-2'>
                         <h3 className="font-semibold text-lg">{todo.title}</h3>
                         <div className='flex gap-2 items-center'>
-                            <button onClick={isOwnerOrAdmin(isSuperuser, username, todo.user.username) ? () => handleEditTodo(todo) : undefined}>
-                                <PencilIcon className={`w-5 h-5 opacity-50 ${isOwnerOrAdmin(isSuperuser, username, todo.user.username) && 'hover:opacity-100 cursor-pointer' } transition-opacity`} />
-                            </button>
-                            <button onClick={isOwnerOrAdmin(isSuperuser, username, todo.user.username) ? () => handleDeleteTodo(todo.id) : undefined}>
-                                <TrashIcon className={`w-5 h-5 opacity-50 ${isOwnerOrAdmin(isSuperuser, username, todo.user.username) && 'hover:opacity-100 hover:text-red-500 cursor-pointer' } transition-all`} />
-                            </button>
+                            {isOwnerOrAdmin(isSuperuser, username, todo.user.username) ? (
+                                <>
+                                    <button onClick={() => handleEditTodo(todo)}>
+                                        <PencilIcon className={`w-5 h-5 opacity-50 hover:opacity-100 cursor-pointer transition-opacity`} />
+                                    </button>
+                                    <button onClick={() => handleDeleteTodo(todo.id)}>
+                                        <TrashIcon className={`w-5 h-5 opacity-50 hover:opacity-100 hover:text-red-500 cursor-pointer transition-all`} />
+                                    </button>
+                                </>
+                            ): (
+                                <>
+                                    <button onClick={() => handleViewTodo(todo)}>
+                                        <CommentIcon className={`w-5 h-5 opacity-80 hover:opacity-100 cursor-pointer transition-all`} />
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                     {todo.description && <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">{todo.description}</p>}

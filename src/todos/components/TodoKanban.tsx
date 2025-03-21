@@ -15,7 +15,7 @@ import TodoForm, { TodoFormData } from "@todos/components/TodoForm";
 import TodoComments from "@todos/components/TodoComments";
 import { deleteTodo, getTodos, updateTodoStatus } from "@todos/services/todos";
 import { getTodoStatusKey } from "@todos/utils/todos";
-import { AnimatePresence } from "framer-motion";
+import TodoDetail from "./TodoDetail";
 
 
 const TodoKanban = () => {
@@ -87,7 +87,7 @@ const TodoKanban = () => {
 		setDisplayForm(true);
 	}
 
-	const closeTodoForm = () => {
+	const handleCloseTodoForm = () => {
 		setDisplayForm(false);
 		setFormTodo(emptyTodoFormData);
 		setTodoComments([]);
@@ -112,6 +112,31 @@ const TodoKanban = () => {
 
 	const handleDeleteTodo = (todoId: Todo['id']) => {
 		todoDeleteMutation.mutate(todoId);
+	}
+
+	// Todo viewing
+	const [displayViewTodo, setDisplayViewTodo] = useState(false);
+	const emptyTodo: Todo = {
+		id: "",
+		title: "",
+		description: "",
+		status: TodoStatus.PENDING,
+		dueDate: "",
+		assignedTo: { isSuperuser: false, username: '' },
+		user: { isSuperuser: false, username: '' },
+		comments: [ { content: '', created: '', id: '', todo: '', user: { isSuperuser: false, username: '' }, } ],
+		lastUpdated: '',
+	}
+	const [viewingTodo, setViewingTodo] = useState<Todo>(emptyTodo);
+
+	const handleViewTodo = (todo: Todo) => {
+		setViewingTodo(todo);
+		setDisplayViewTodo(true);
+	}
+
+	const handleCloseViewTodo = () => {
+		setViewingTodo(emptyTodo);
+		setDisplayViewTodo(false);
 	}
 
 	// On drag end handling
@@ -183,7 +208,14 @@ const TodoKanban = () => {
 										className="flex flex-col min-h-[150px]"
 									>
 										{todos.filter((todo) => todo.status.toLowerCase() === status.toLocaleLowerCase()).map((todo, index) => (
-											<TodoKanbanItem key={todo.id} index={index} todo={todo} handleEditTodo={handleEditTodoForm} handleDeleteTodo={handleDeleteTodo} />
+											<TodoKanbanItem
+												key={todo.id}
+												index={index}
+												todo={todo}
+												handleEditTodo={handleEditTodoForm}
+												handleDeleteTodo={handleDeleteTodo}
+												handleViewTodo={handleViewTodo}
+											/>
 										))}
 										{provided.placeholder}
 									</div>
@@ -193,15 +225,22 @@ const TodoKanban = () => {
 					))}
 				</DragDropContext>
 			</div>
-			<ModalWindow onClose={closeTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[70vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
+			<ModalWindow onClose={handleCloseTodoForm} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[70vh] overflow-auto relative`} displayed={displayForm} closeable={true}>
 				<div className="flex flex-col gap-4">
-					<TodoForm onClose={closeTodoForm} todo={formTodo} />
+					<TodoForm onClose={handleCloseTodoForm} todo={formTodo} />
 					{formTodo.id && (
 						<>
 							<span className='w-full h-[1px] bg-zinc-500 opacity-50'></span>
 							<TodoComments comments={todoComments} />
 						</>
 					)}
+				</div>
+			</ModalWindow>
+			<ModalWindow onClose={handleCloseViewTodo} contentStyle={`max-w-[900px] max-md:max-h-[90vh] max-h-[70vh] overflow-auto relative`} displayed={displayViewTodo} closeable={true}>
+				<div className="flex flex-col gap-4">
+					<TodoDetail todo={viewingTodo} />
+					<span className='w-full h-[1px] bg-zinc-500 opacity-50'></span>
+					<TodoComments comments={viewingTodo.comments} />
 				</div>
 			</ModalWindow>
 		</div>

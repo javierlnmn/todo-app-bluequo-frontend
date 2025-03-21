@@ -10,10 +10,10 @@ interface TodoStatusBadgeProps {
 const TodoStatusBadge: FC<TodoStatusBadgeProps> = ({ todoStatus }) => {
     return (
         <h2
-            className={`w-fit uppercase font-bold text-sm px-2 py-1 rounded-lg text-zinc-100 text-center
-                ${todoStatus === TodoStatus.COMPLETED && "bg-emerald-800/80 dark:bg-emerald-500/60"}
-                ${todoStatus === TodoStatus.IN_PROGRESS && "bg-sky-800/80 dark:bg-sky-500/60"}
-                ${todoStatus === TodoStatus.PENDING && "bg-purple-800/80 dark:bg-purple-500/60"}
+            className={`w-fit uppercase font-black text-sm px-2 py-1 rounded-full text-zinc-100 text-center
+                ${todoStatus === TodoStatus.COMPLETED && "border dark:border-emerald-400 border-emerald-500 bg-emerald-800/60 dark:bg-emerald-500/30"}
+                ${todoStatus === TodoStatus.IN_PROGRESS && "border dark:border-sky-400 border-sky-500 bg-sky-800/60 dark:bg-sky-500/30"}
+                ${todoStatus === TodoStatus.PENDING && "border dark:border-purple-400 border-purple-500 bg-purple-800/60 dark:bg-purple-500/30"}
             `}
         >
             {todoStatus}
