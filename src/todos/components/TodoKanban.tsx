@@ -56,10 +56,10 @@ const TodoKanban = () => {
 		},
 	});
 
-	const handleUpdateTodoAsync = (id: string, status: string) => {
+	const handleUpdateTodoAsync = (todoId: Todo['id'], status: TodoStatus) => {
 		const draggedTodoStatusKey = getTodoStatusKey(status as TodoStatus);
 		if (draggedTodoStatusKey) {
-			todoStatusMutation.mutateAsync({ todoId: id, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
+			todoStatusMutation.mutateAsync({ todoId, newStatus: draggedTodoStatusKey as "PENDING" | "IN_PROGRESS" | "COMPLETED" });
 		}
 	}
 
@@ -96,7 +96,7 @@ const TodoKanban = () => {
 	// Todo deleting
 	const todoDeleteMutation = useMutation({
 		mutationFn: deleteTodo,
-		onSuccess: (todoId) => {
+		onSuccess: (todoId: Todo['id']) => {
             setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
             queryClient.invalidateQueries({ queryKey: ['todos'] });
             toast.success('Todo deleted successfuly!', {
@@ -110,8 +110,8 @@ const TodoKanban = () => {
         }
     });
 
-	const handleDeleteTodo = (id: string) => {
-		todoDeleteMutation.mutate(id);
+	const handleDeleteTodo = (todoId: Todo['id']) => {
+		todoDeleteMutation.mutate(todoId);
 	}
 
 	// On drag end handling

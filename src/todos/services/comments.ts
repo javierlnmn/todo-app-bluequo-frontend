@@ -3,11 +3,12 @@ import axios from "axios";
 import config from "@/config";
 
 import { getStoredUserToken } from "@auth/utils/jwt";
+import { Comment } from "@todos/types/todos";
 
 
 const { API_BASE_URL } = config;
 
-export const deleteComment = async (commentId: string) => {
+export const deleteComment = async (commentId: Comment['id']) => {
 	const userJwt = getStoredUserToken();
 
 	try {

@@ -27,7 +27,7 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments }) => {
 
     const mutation = useMutation({
         mutationFn: deleteComment,
-        onSuccess: (commentId) => {
+        onSuccess: (commentId: Comment['id']) => {
             setCommentList((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
             queryClient.invalidateQueries({ queryKey: ['todos'] });
             toast.success('Comment deleted successfuly!', {

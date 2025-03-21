@@ -6,6 +6,7 @@ import { getStoredUserToken } from "@auth/utils/jwt";
 
 import { TodoStatus } from "@todos/enums/todos";
 import { TodoFormData } from "@todos/components/TodoForm";
+import { Todo } from "@todos/types/todos";
 
 
 const { API_BASE_URL } = config;
@@ -33,7 +34,7 @@ export const getTodos = async () => {
 
 
 interface UpdateTodoStatusParams {
-	todoId: string;
+	todoId: Todo['id'];
 	newStatus: keyof typeof TodoStatus;
 }
 
@@ -108,7 +109,7 @@ export const updateTodo = async ({ ...todo }: TodoFormData) => {
 	}
 };
 
-export const deleteTodo = async (todoId: string) => {
+export const deleteTodo = async (todoId: Todo['id']) => {
 	const userJwt = getStoredUserToken();
 
 	try {
