@@ -15,7 +15,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 	const { data: isAuthenticated, isLoading } = useQuery({
 		queryKey: ["authStatus"],
 		queryFn: isUserAuthenticated,
-		staleTime: 5 * 60 * 1000,
+		// staleTime: 5 * 60 * 1000,
 		retry: false,
 		refetchOnWindowFocus: false,
 	});
