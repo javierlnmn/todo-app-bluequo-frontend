@@ -8,6 +8,7 @@ import { Todo } from '@todos/types/todos.d';
 import PencilIcon from '@icons/PencilIcon';
 import { formatDate } from '@common/utils/dates';
 import CrownIcon from '@icons/CrownIcon';
+import { isOwnerOrAdmin } from '@/auth/utils/user';
 
 
 interface TodoKanbanItemProps {
@@ -24,7 +25,7 @@ const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index, handleEditTodo }
         <Draggable
             draggableId={todo.id}
             index={index}
-            isDragDisabled={!isSuperuser && todo.user.username !== username}
+            isDragDisabled={!isOwnerOrAdmin(isSuperuser, username, todo.user.username)}
         >
             {(provided) => (
                 <div
@@ -32,13 +33,13 @@ const TodoKanbanItem: FC<TodoKanbanItemProps> = ({ todo, index, handleEditTodo }
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     className={`flex flex-col gap-1 mb-3 bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg shadow-sm cursor-grab
-                        ${!isSuperuser && todo.user.username !== username && `opacity-50 !cursor-default`}
+                        ${!isOwnerOrAdmin(isSuperuser, username, todo.user.username) && `opacity-50 !cursor-default`}
                     `}
                 >
                     <div className='flex gap-2 items-center justify-between mb-2'>
                         <h3 className="font-semibold text-lg">{todo.title}</h3>
-                        <button onClick={() => handleEditTodo(todo)}>
-                            <PencilIcon className='w-5 h-5 opacity-50 hover:opacity-100 transition-opacity cursor-pointer' />
+                        <button onClick={isOwnerOrAdmin(isSuperuser, username, todo.user.username) ? () => handleEditTodo(todo) : undefined}>
+                            <PencilIcon className={`w-5 h-5 opacity-50 ${isOwnerOrAdmin(isSuperuser, username, todo.user.username) && 'hover:opacity-100 cursor-pointer' } transition-opacity`} />
                         </button>
                     </div>
                     {todo.description && <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">{todo.description}</p>}

@@ -43,7 +43,7 @@ export const updateTodoStatus = async ({ todoId, newStatus }: UpdateTodoStatusPa
 	try {
 
 		const response = await axios.patch(
-			`${config.API_BASE_URL}/todos/todos/${todoId}/`,
+			`${API_BASE_URL}/todos/todos/${todoId}/`,
 			{
 				status: newStatus,
 			},
@@ -68,7 +68,7 @@ export const createTodo = async ({ ...todo }: TodoFormData) => {
 	try {
 
 		const response = await axios.post(
-			`${config.API_BASE_URL}/todos/todos/`,
+			`${API_BASE_URL}/todos/todos/`,
 			todo,
 			{
 				headers: {
@@ -91,7 +91,7 @@ export const updateTodo = async ({ ...todo }: TodoFormData) => {
 	try {
 
 		const response = await axios.put(
-			`${config.API_BASE_URL}/todos/todos/${todo.id}/`,
+			`${API_BASE_URL}/todos/todos/${todo.id}/`,
 			todo,
 			{
 				headers: {

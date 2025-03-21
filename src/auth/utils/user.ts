@@ -1,5 +1,6 @@
 import { getStoredUserToken } from "@auth/utils/jwt";
 import { getUserData } from "@auth/services/user";
+import { User } from "@auth/types/user";
 
 
 export const isUserAuthenticated = async () => {
@@ -46,3 +47,7 @@ export const getUserStoreData = async () => {
 
 	return null;
 };
+
+export const isOwnerOrAdmin = (isAdmin:  User['isSuperuser'], username: User['username'], resourceOwner: User['username']) => {
+	return isAdmin || username === resourceOwner;
+}

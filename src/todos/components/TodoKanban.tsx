@@ -35,7 +35,7 @@ const TodoKanban = () => {
 	}, [fetchedTodos]);
 
 
-	// Todos updating with mutation
+	// Todos status updating with mutation
 	const mutation = useMutation({
 		mutationFn: updateTodoStatus,
 		onSuccess: (updatedTodo) => {
