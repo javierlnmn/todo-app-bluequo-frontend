@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useUserStore } from '@auth/stores/userStore';
 import { isOwnerOrAdmin } from '@auth/utils/user';
 
-import { formatDate } from '@common/utils/dates';
+import { formatDateTime } from '@common/utils/dates';
 
 import { Comment, Todo } from '@todos/types/todos.d';
 import { deleteComment, postComment } from '@todos/services/comments';
@@ -146,7 +146,7 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments, todoId }) => {
                                                 <TrashIcon className="w-4 h-4 cursor-pointer hover:text-red-500 transition-colors" />
                                             </button>
                                         )}
-                                        <p className="font-light opacity-50 text-sm">{formatDate(comment.created)}</p>
+                                        <p className="font-light opacity-50 text-sm">{formatDateTime(comment.created)}</p>
                                     </div>
                                 </div>
                                 <p>{comment.content}</p>

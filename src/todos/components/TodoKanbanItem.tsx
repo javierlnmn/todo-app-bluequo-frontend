@@ -2,7 +2,7 @@ import { Draggable } from '@hello-pangea/dnd';
 import { FC } from 'react';
 
 import { useUserStore } from '@auth/stores/userStore';
-import { isOwnerOrAdmin } from '@/auth/utils/user';
+import { isOwnerOrAdmin } from '@auth/utils/user';
 
 import { Todo } from '@todos/types/todos.d';
 
@@ -11,7 +11,7 @@ import TrashIcon from '@icons/TrashIcon';
 import CrownIcon from '@icons/CrownIcon';
 
 import { formatDate } from '@common/utils/dates';
-import CommentIcon from '@/common/icons/CommentIcon';
+import CommentIcon from '@common/icons/CommentIcon';
 
 
 interface TodoKanbanItemProps {
