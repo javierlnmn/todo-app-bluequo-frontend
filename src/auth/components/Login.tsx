@@ -76,7 +76,7 @@ const Login: FC = () => {
 	) : userAuthenticated ? (
 		<Navigate to={'/'} />
 	) : (
-		<div className='h-screen w-screen grid place-items-center bg-zinc-50 text-zinc-900 dark:text-zinc-200 dark:bg-zinc-900'>
+		<div className='h-screen w-screen grid place-items-center bg-zinc-50 text-zinc-800 dark:text-zinc-200 dark:bg-zinc-900'>
 			<div className='absolute top-3 right-3'>
 				<ToggleDarkModeButtons />
 			</div>

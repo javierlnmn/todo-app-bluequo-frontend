@@ -14,8 +14,8 @@ import TodoKanbanItem from "@todos/components/TodoKanbanItem";
 import TodoForm, { TodoFormData } from "@todos/components/TodoForm";
 import TodoComments from "@todos/components/TodoComments";
 import { deleteTodo, getTodos, updateTodoStatus } from "@todos/services/todos";
-import { getTodoStatusKey } from "@todos/utils/todos";
-import TodoDetail from "./TodoDetail";
+import { emptyTodoData, emptyTodoFormData, getTodoStatusKey } from "@todos/utils/todos";
+import TodoDetail from "@todos/components/TodoDetail";
 
 
 const TodoKanban = () => {
@@ -65,24 +65,23 @@ const TodoKanban = () => {
 
 	// Todo form and comments displaying
 	const [displayForm, setDisplayForm] = useState(false);
-	const emptyTodoFormData: TodoFormData = {
-		id: "",
-		title: "",
-		description: "",
-		status: getTodoStatusKey(TodoStatus.PENDING) || 'PENDING',
-		dueDate: "",
-		assignedTo: null,
-	}
 	const [formTodo, setFormTodo] = useState<TodoFormData>(emptyTodoFormData);
 	const [todoComments, setTodoComments] = useState<Comment[]>([]);
 
 	const handleCreateTodoForm = (todoStatus: TodoStatus) => {
-		setFormTodo({ ...emptyTodoFormData, status: getTodoStatusKey(todoStatus) || 'PENDING', });
+		setFormTodo({
+			...emptyTodoFormData,
+			status: getTodoStatusKey(todoStatus) || 'PENDING',
+		});
 		setDisplayForm(true);
 	}
 
 	const handleEditTodoForm = (todo: Todo) => {
-		setFormTodo({ ...todo, assignedTo: null, status: getTodoStatusKey(todo.status) || todo.status.toUpperCase().replace(' ', '_') });
+		setFormTodo({
+			...todo,
+			assignedTo: todo.assignedTo?.id ?? '',
+			status: getTodoStatusKey(todo.status) || todo.status.toUpperCase().replace(' ', '_') 
+		});
 		setTodoComments(todo.comments);
 		setDisplayForm(true);
 	}
@@ -116,18 +115,7 @@ const TodoKanban = () => {
 
 	// Todo viewing
 	const [displayViewTodo, setDisplayViewTodo] = useState(false);
-	const emptyTodo: Todo = {
-		id: "",
-		title: "",
-		description: "",
-		status: TodoStatus.PENDING,
-		dueDate: "",
-		assignedTo: { isSuperuser: false, username: '' },
-		user: { isSuperuser: false, username: '' },
-		comments: [ { content: '', created: '', id: '', todo: '', user: { isSuperuser: false, username: '' }, } ],
-		lastUpdated: '',
-	}
-	const [viewingTodo, setViewingTodo] = useState<Todo>(emptyTodo);
+	const [viewingTodo, setViewingTodo] = useState<Todo>(emptyTodoData);
 
 	const handleViewTodo = (todo: Todo) => {
 		setViewingTodo(todo);
@@ -135,7 +123,7 @@ const TodoKanban = () => {
 	}
 
 	const handleCloseViewTodo = () => {
-		setViewingTodo(emptyTodo);
+		setViewingTodo(emptyTodoData);
 		setDisplayViewTodo(false);
 	}
 

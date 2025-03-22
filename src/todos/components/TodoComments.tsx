@@ -92,30 +92,6 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments, todoId }) => {
     return (
         <div className="flex flex-col gap-2">
             <h3 className="text-xl font-bold">Comments</h3>
-            <form className='flex items-center gap-3 mb-3'>
-                <input
-                    type="text"
-                    id="content"
-                    name="content"
-                    value={commentFormData.content}
-                    className="h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
-                    onChange={handleFieldChange}
-                    placeholder="Comment something..."
-                    required
-                />
-                <button
-                    disabled={isCommentFormValid()}
-                    onClick={handleSubmitPostComment}
-                    type="submit"
-                    className="h-full text-zinc-100 bg-sky-600 transition-colors disabled:opacity-50 disabled:hover:bg-sky-600 hover:bg-sky-500 cursor-pointer w-1/4 p-3 rounded-md font-bold flex justify-center"
-                >
-                    {isPending ? (
-                        <LoadingThrobberIcon className="w-5 h-5 !fill-zinc-100 !text-zinc-200/60 dark:!text-zinc-300/50" />
-                    ) : (
-                        "Comment"
-                    )}
-                </button>
-            </form>
             {commentList.length > 0 ? (
                 <div className="flex flex-col gap-3">
                     <AnimatePresence>
@@ -123,11 +99,11 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments, todoId }) => {
                             <motion.div
                                 layout
                                 key={comment.id}
-                                className={`bg-zinc-200 dark:bg-zinc-700 rounded-md p-3 py-2 flex flex-col gap-2 max-md:w-11/12 w-8/12
-                                    ${username === comment.user.username ? 'ml-auto' : 'mr-auto' }
+                                className={`bg-zinc-200 dark:bg-zinc-700 rounded-2xl p-3 flex flex-col gap-2 max-md:w-11/12 w-8/12
+                                    ${username === comment.user.username ? 'ml-auto rounded-br-none' : 'mr-auto rounded-bl-none' }
                                 `}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
                                 transition={{ duration: 0.2 }}
                             >
@@ -157,6 +133,30 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments, todoId }) => {
             ) : (
                 <p className="font-light opacity-70">There are no comments yet.</p>
             )}
+            <form className='flex items-center gap-3 mt-3'>
+                <input
+                    type="text"
+                    id="content"
+                    name="content"
+                    value={commentFormData.content}
+                    className="h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+                    onChange={handleFieldChange}
+                    placeholder="Comment something..."
+                    required
+                />
+                <button
+                    disabled={isCommentFormValid()}
+                    onClick={handleSubmitPostComment}
+                    type="submit"
+                    className="h-full text-zinc-100 bg-sky-600 transition-colors disabled:opacity-50 disabled:hover:bg-sky-600 hover:bg-sky-500 cursor-pointer w-1/4 p-3 rounded-md font-bold flex justify-center"
+                >
+                    {isPending ? (
+                        <LoadingThrobberIcon className="w-5 h-5 !fill-zinc-100 !text-zinc-200/60 dark:!text-zinc-300/50" />
+                    ) : (
+                        "Comment"
+                    )}
+                </button>
+            </form>
         </div>
     );
 };

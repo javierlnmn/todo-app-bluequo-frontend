@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 import LoadingThrobberIcon from "@common/icons/LoadingThrobberIcon";
@@ -7,6 +7,8 @@ import LoadingThrobberIcon from "@common/icons/LoadingThrobberIcon";
 import { TodoStatus } from "@todos/enums/todos.d";
 import { createTodo, updateTodo } from "@todos/services/todos";
 import { getTodoStatusKey } from "@todos/utils/todos";
+import { User } from "@/auth/types/user";
+import { getUsersList } from "@/auth/services/user";
 
 
 export interface TodoFormData {
@@ -15,7 +17,7 @@ export interface TodoFormData {
 	description: string;
 	status: string;
 	dueDate: string;
-	assignedTo: string | null;
+	assignedTo: User['id'];
 }
 
 interface TodoFormProps {
@@ -43,6 +45,14 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 		)
 	}
 
+	// Users list fetching
+	const { data: usersList = [], isLoading: isLoadingUsersList, } = useQuery<User[]>({
+		queryKey: ["users"],
+		queryFn: getUsersList,
+		retry: false,
+		refetchOnWindowFocus: false,
+	});
+	
 	// Mutation for creating/updating todo
 	const mutation = useMutation({
 		mutationFn: async (data: TodoFormData) => {
@@ -75,18 +85,40 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 		<div className="flex flex-col gap-4">
 			<h3 className="text-xl font-bold mb-1">{todo.id ? "Edit Todo" : "Create Todo"}</h3>
 			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-				<div className="flex flex-col items-start gap-1">
-					<label htmlFor="title" className="font-bold">Title *</label>
-					<input
-						type="text"
-						id="title"
-						name="title"
-						value={formData.title}
-						className="h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
-						onChange={handleFieldChange}
-						placeholder="Todo Title"
-						required
-					/>
+				<div className="flex gap-4 items-center max-sm:flex-col">
+					<div className="w-full flex-2 max-lg:flex-3 max-sm:flex-1 flex flex-col items-start gap-1">
+						<label htmlFor="title" className="font-bold">Title *</label>
+						<input
+							type="text"
+							id="title"
+							name="title"
+							value={formData.title}
+							className="disabled:opacity-50 h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+							onChange={handleFieldChange}
+							placeholder="Todo Title"
+							required
+						/>
+					</div>
+					<div className="w-full flex-1 max-lg:flex-2 max-sm:flex-1 flex flex-col items-start gap-1">
+						<div className="flex items-center gap-3">
+							<label htmlFor="title" className="font-bold">Assigned user</label>
+							{isLoadingUsersList && <LoadingThrobberIcon className="w-4 h-4" />}
+						</div>
+						<select
+							disabled={isLoadingUsersList}
+							name="assignedTo"
+							value={formData.assignedTo}
+							onChange={handleFieldChange}
+							className="disabled:opacity-50 h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+						>
+							<option defaultChecked value={''}>-</option>
+							{usersList.map((user, key) => (
+								<option key={key} value={user.id}>
+									{user.username}
+								</option>
+							))}
+						</select>
+					</div>
 				</div>
 
 				<div className="flex flex-col items-start gap-1">
@@ -96,19 +128,19 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 						value={formData.description}
 						onChange={handleFieldChange}
 						placeholder="Todo Description"
-						className="w-full h-32 p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+						className="disabled:opacity-50 w-full h-32 p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
 					/>
 				</div>
 
 
-				<div className="flex gap-4 items-center">
-					<div className="flex-1 flex flex-col items-start gap-1">
+				<div className="flex gap-4 items-center max-sm:flex-col">
+					<div className="w-full flex-1 flex flex-col items-start gap-1">
 						<label htmlFor="title" className="font-bold">Status *</label>
 						<select
 							name="status"
 							value={formData.status}
 							onChange={handleFieldChange}
-							className="h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+							className="disabled:opacity-50 h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
 						>
 							{Object.values(TodoStatus).map((status) => (
 								<option key={status} value={getTodoStatusKey(status as TodoStatus)}>
@@ -117,14 +149,14 @@ const TodoForm: FC<TodoFormProps> = ({ todo, onClose }) => {
 							))}
 						</select>
 					</div>
-					<div className="flex-1 flex flex-col items-start gap-1">
+					<div className="w-full flex-1 flex flex-col items-start gap-1">
 						<label htmlFor="title" className="font-bold">Due date *</label>
 						<input
 							type="date"
 							name="dueDate"
 							value={formData.dueDate}
 							onChange={handleFieldChange}
-							className="h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
+							className="disabled:opacity-50 h-12 w-full p-3 bg-zinc-100 dark:bg-zinc-700 rounded-md border-0 shadow-md outline-none transition-all hover:bg-zinc-200/80 focus:bg-zinc-200/80 dark:hover:bg-zinc-600/80 dark:focus:bg-zinc-600/80"
 						/>
 					</div>
 				</div>

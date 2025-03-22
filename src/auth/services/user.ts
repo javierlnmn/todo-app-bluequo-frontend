@@ -3,6 +3,7 @@ import axios from "axios";
 import { LoginFormProps } from "@auth/types/user";
 
 import config from "@/config";
+import { getStoredUserToken } from "../utils/jwt";
 
 
 const { API_BASE_URL } = config;
@@ -33,4 +34,20 @@ export const getUserData = async (token: string) => {
         throw error;
     }
     
+}
+
+export const getUsersList = async () => {
+
+    const userJwt = getStoredUserToken();
+
+    try {
+
+        const response = await axios.get(`${API_BASE_URL}/users/users/`, { headers: { 'Authorization': userJwt } });
+
+        return response.data;   
+
+    } catch (error) {
+        throw error;
+    }
+
 }

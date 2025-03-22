@@ -3,6 +3,12 @@ import { getUserData } from "@auth/services/user";
 import { User } from "@auth/types/user";
 
 
+export const emptyUserData: User = {
+	id: '',
+	isSuperuser: false,
+	username: '',
+}
+
 export const isUserAuthenticated = async () => {
 	const userJwt = getStoredUserToken();
 
@@ -37,6 +43,7 @@ export const getUserStoreData = async () => {
 		if (userDataResponse.status === 200) {
 			const userData = userDataResponse.data;
 			return {
+				id: userData.id,
 				username: userData.username,
 				isSuperuser: userData.isSuperuser
 			};
