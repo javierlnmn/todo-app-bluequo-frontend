@@ -9,6 +9,7 @@ interface UserStore extends User {
 }
 
 export const useUserStore = create<UserStore>((set) => ({
+    id: '',
     username: '',
     isSuperuser: false,
     setUser: (user: User) => set((prevState) => ({
