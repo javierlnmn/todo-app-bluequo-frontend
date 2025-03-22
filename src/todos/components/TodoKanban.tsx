@@ -98,7 +98,7 @@ const TodoKanban = () => {
 		onSuccess: (todoId: Todo['id']) => {
             setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
             queryClient.invalidateQueries({ queryKey: ['todos'] });
-            toast.success('Todo deleted successfuly!', {
+            toast.success('Todo deleted successfully!', {
 				className: '!bg-zinc-100 dark:!bg-zinc-800 !text-zinc-800 dark:!text-zinc-200',
 			});
         },

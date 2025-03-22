@@ -37,7 +37,7 @@ const TodoComments: FC<TodoCommentsProps> = ({ comments, todoId }) => {
         onSuccess: (commentId: Comment['id']) => {
             setCommentList((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
             queryClient.invalidateQueries({ queryKey: ['todos'] });
-            toast.success('Comment deleted successfuly!', {
+            toast.success('Comment deleted successfully!', {
 				className: '!bg-zinc-100 dark:!bg-zinc-800 !text-zinc-800 dark:!text-zinc-200',
 			});
         },

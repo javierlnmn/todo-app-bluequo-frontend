@@ -24,7 +24,7 @@ const TodoDetail: FC<TodoDetailProps> = ({ todo, }) => {
                     <TodoStatusBadge todoStatus={todo.status} />
                 </div>
             </div>
-            {todo.description && <p className="text-sm text-zinc-600 dark:text-zinc-300 truncate">{todo.description}</p>}
+            {todo.description && <p className="text-zinc-600 dark:text-zinc-300">{todo.description}</p>}
             <div className='flex justify-between items-center'>
                 {todo.assignedTo ? (
                     <span className='relative'>
